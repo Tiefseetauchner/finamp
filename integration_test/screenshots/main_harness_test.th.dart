@@ -1,7 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 import 'package:tief_test_harness/tief_test_harness.dart';
-import 'splash_screen/splash_screen_harness.dart' as h0;
+import 'downloads_screen/downloads_screen_harness.dart' as h0;
 
 enum PhoneHarness {
   splashScreen;
@@ -10,15 +10,10 @@ enum PhoneHarness {
     PhoneHarness.splashScreen => 'Splash Screen',
   };
 
-  static PhoneHarness fromHarnessName(String name) =>
-      values.firstWhere(
-        (harness) => harness.harnessName == name,
-        orElse: () => throw ArgumentError.value(
-          name,
-          'name',
-          'No PhoneHarness with this harness name.',
-        ),
-      );
+  static PhoneHarness fromHarnessName(String name) => values.firstWhere(
+    (harness) => harness.harnessName == name,
+    orElse: () => throw ArgumentError.value(name, 'name', 'No PhoneHarness with this harness name.'),
+  );
 }
 
 class PhoneHarnessRegistry {
@@ -32,12 +27,10 @@ class PhoneHarnessRegistry {
   };
 
   /// Restricts a subsequent [build] to just [harnesses].
-  PhoneHarnessRegistry only(Set<PhoneHarness> harnesses) =>
-      PhoneHarnessRegistry._(harnesses);
+  PhoneHarnessRegistry only(Set<PhoneHarness> harnesses) => PhoneHarnessRegistry._(harnesses);
 
   /// Restricts a subsequent [build] to just the harnesses named [names].
-  PhoneHarnessRegistry onlyNamed(Set<String> names) =>
-      only(names.map(PhoneHarness.fromHarnessName).toSet());
+  PhoneHarnessRegistry onlyNamed(Set<String> names) => only(names.map(PhoneHarness.fromHarnessName).toSet());
 
   /// Calls every selected builder and awaits the results, keyed by harness name.
   Future<Map<String, ScenarioHarness>> build() async {

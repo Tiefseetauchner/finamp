@@ -31,6 +31,12 @@ Future<(bool, List<FlutterErrorDetails>)> initializeApp() async {
     ),
   );
 
-  await Future<void>.delayed(Duration(seconds: 30));
+  Stopwatch stopwatch = Stopwatch()..start();
+  while (stopwatch.elapsed < Duration(seconds: 30)) {
+    if (mainCompleted) return (true, mainErrors);
+
+    await Future<void>.delayed(Duration(seconds: 1));
+  }
+
   return (mainCompleted, mainErrors);
 }

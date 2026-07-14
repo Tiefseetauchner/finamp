@@ -1,5 +1,10 @@
 import 'package:finamp/components/PlayerScreen/player_split_screen_scaffold.dart';
+import 'package:finamp/l10n/app_localizations.dart';
+import 'package:finamp/services/keep_screen_on_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:tief_test_harness/tief_test_harness.dart';
 
 import '../helpers.dart';
@@ -14,11 +19,30 @@ Future<void> main() async {
 
   final harnessRunner = HarnessRunner(
     harnesses: harnesses,
-    appBuilder: ({required child, required locale, providerScopeBuilder}) => MaterialApp(
-      home: child,
-      builder: (BuildContext context, Widget? widget) {
-        return buildPlayerSplitScreenScaffold(context, widget);
-      },
+    appBuilder: ({required child, required locale, providerScopeBuilder}) => UncontrolledProviderScope(
+      container: GetIt.instance<ProviderContainer>(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        routes: {"/": (context) => child},
+        initialRoute: "/",
+        navigatorObservers: [SplitScreenNavigatorObserver(), KeepScreenOnObserver()],
+        builder: (BuildContext context, Widget? widget) {
+          return buildPlayerSplitScreenScaffold(context, widget);
+        },
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        // We awkwardly put English as the first supported locale so
+        // that basicLocaleListResolution falls back to it instead of
+        // the first language in supportedLocales (Arabic as of writing)
+        localeListResolutionCallback: (locales, supportedLocales) =>
+            basicLocaleListResolution(locales, [const Locale("en")].followedBy(supportedLocales)),
+        locale: locale,
+      ),
     ),
   );
 
