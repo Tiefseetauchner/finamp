@@ -1514,10 +1514,10 @@ packages:
     dependency: transitive
     description:
       name: safe_local_storage
-      sha256: "287ea1f667c0b93cdc127dccc707158e2d81ee59fba0459c31a0c7da4d09c755"
+      sha256: "7483b3d5e8976f0bd263647c03b96131ee8e43f48b56fa8a8ec459e8515d74b0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   screen_retriever:
     dependency: transitive
     description:
@@ -1837,6 +1837,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  tief_screen:
+    dependency: "direct dev"
+    description:
+      name: tief_screen
+      sha256: "420d80e667bf3a93def2beffdc5feea582610ceb9b144b60051b5901211f5b21"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
+  tief_test_harness:
+    dependency: "direct dev"
+    description:
+      name: tief_test_harness
+      sha256: "008517c845eeddbbf8e66e88724bf7b70584d0a44c765189d75424c91037b8f5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   time:
     dependency: transitive
     description:
@@ -2142,5 +2158,5 @@ packages:
     source: hosted
     version: "2.1.0"
 sdks:
-  dart: ">=3.11.0 <4.0.0"
+  dart: ">=3.12.2 <4.0.0"
   flutter: ">=3.41.0"
