@@ -11,9 +11,9 @@ import '../helpers.dart';
 import 'main_harness_test.th.dart';
 import 'screenshot_manager_provider.dart';
 
-@GenerateHarnessRegistry("phone")
+@GenerateHarnessRegistry("main")
 Future<void> main() async {
-  final harnessRegistry = PhoneHarnessRegistry();
+  final harnessRegistry = MainHarnessRegistry();
 
   final harnesses = await harnessRegistry.build();
 
