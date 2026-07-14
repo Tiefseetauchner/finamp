@@ -3,34 +3,41 @@
 import 'package:tief_test_harness/tief_test_harness.dart';
 import 'downloads_screen/downloads_screen_harness.dart' as h0;
 
-enum PhoneHarness {
-  splashScreen;
+enum MainHarness {
+  downloadsScreen;
 
   String get harnessName => switch (this) {
-    PhoneHarness.splashScreen => 'Splash Screen',
+    MainHarness.downloadsScreen => 'Downloads Screen',
   };
 
-  static PhoneHarness fromHarnessName(String name) => values.firstWhere(
-    (harness) => harness.harnessName == name,
-    orElse: () => throw ArgumentError.value(name, 'name', 'No PhoneHarness with this harness name.'),
-  );
+  static MainHarness fromHarnessName(String name) =>
+      values.firstWhere(
+        (harness) => harness.harnessName == name,
+        orElse: () => throw ArgumentError.value(
+          name,
+          'name',
+          'No MainHarness with this harness name.',
+        ),
+      );
 }
 
-class PhoneHarnessRegistry {
-  const PhoneHarnessRegistry() : this._(null);
-  const PhoneHarnessRegistry._(this._selected);
+class MainHarnessRegistry {
+  const MainHarnessRegistry() : this._(null);
+  const MainHarnessRegistry._(this._selected);
 
-  final Set<PhoneHarness>? _selected;
+  final Set<MainHarness>? _selected;
 
-  static const Map<PhoneHarness, Future<ScenarioHarness> Function()> _builders = {
-    PhoneHarness.splashScreen: h0.buildEmptyHomeScreenHarness,
+  static const Map<MainHarness, Future<ScenarioHarness> Function()> _builders = {
+    MainHarness.downloadsScreen: h0.buildEmptyHomeScreenHarness,
   };
 
   /// Restricts a subsequent [build] to just [harnesses].
-  PhoneHarnessRegistry only(Set<PhoneHarness> harnesses) => PhoneHarnessRegistry._(harnesses);
+  MainHarnessRegistry only(Set<MainHarness> harnesses) =>
+      MainHarnessRegistry._(harnesses);
 
   /// Restricts a subsequent [build] to just the harnesses named [names].
-  PhoneHarnessRegistry onlyNamed(Set<String> names) => only(names.map(PhoneHarness.fromHarnessName).toSet());
+  MainHarnessRegistry onlyNamed(Set<String> names) =>
+      only(names.map(MainHarness.fromHarnessName).toSet());
 
   /// Calls every selected builder and awaits the results, keyed by harness name.
   Future<Map<String, ScenarioHarness>> build() async {
