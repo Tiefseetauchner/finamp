@@ -149,22 +149,3 @@ void main() async {
     // TODO add test where we migrate from old settings data?
   });
 }
-
-extension WaitForElement on WidgetTester {
-  Future<void> waitFor(Finder finder, {int seconds = 20, bool realtime = true}) async {
-    int i = 0;
-    while (true) {
-      await pump(Duration(seconds: 1));
-      if (any(finder)) {
-        return;
-      }
-      if (i >= seconds) {
-        throw "$finder never found expected widget after $seconds seconds.";
-      }
-      i++;
-      if (realtime) {
-        await Future<void>.delayed(Duration(seconds: 1));
-      }
-    }
-  }
-}
