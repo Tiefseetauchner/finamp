@@ -1,3 +1,4 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:tief_test_harness/tief_test_harness.dart';
 
 import '../helpers.dart';
@@ -7,6 +8,11 @@ import 'screenshot_manager_provider.dart';
 @GenerateHarnessRegistry("main")
 Future<void> main() async {
   final harnessRegistry = MainHarnessRegistry();
+
+  final harnessNames = const String.fromEnvironment("HARNESSES", defaultValue: "");
+  if (harnessNames.isNotEmpty) {
+    harnessRegistry.onlyNamed(harnessNames.split(",").toSet());
+  }
 
   final harnesses = await harnessRegistry.build();
 
@@ -22,6 +28,8 @@ Future<void> main() async {
       if (!mainCompleted || mainErrors.isNotEmpty) throw Exception("Main did not complete without errors.");
 
       ref.read(screenshotManagerStateProvider.notifier).initialize("10.0.2.2", 3824);
+
+      binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
     },
     tearDown: (binding, ref) async {
       ref.read(screenshotManagerStateProvider)!.dispose();

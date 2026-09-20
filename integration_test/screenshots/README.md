@@ -42,3 +42,7 @@ Creates a 9:16 phone. Start the emulator with `emulator @finampemu`.
 ## Tests
 
 Run tests via `flutter test integration_test/screenshots`. This will detect all `*_test.dart` files, which in our case is the `main_harness_test.dart`.
+
+Tests take environment variables to set your server and authorization. Use with `-D JELLYFIN_SERVER=<YOUR_SERVER> -D JELLYFIN_USER=<YOUR_USER> -D JELLYFIN_PASSWORD=<YOUR_PASSWORD>`.
+
+Additionally, you can define `-D HARNESSES="Harness 1","Harness 2"` to only run specific harnesses.

@@ -11,8 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 
-import 'helpers.dart';
-
 Future<(bool, List<FlutterErrorDetails>)> initializeApp() async {
   bool mainCompleted = false;
   List<FlutterErrorDetails> mainErrors = [];
@@ -69,20 +67,15 @@ extension WaitForElement on WidgetTester {
 }
 
 Future<void> loginToJellyfin(WidgetTester tester) async {
-  final container = GetIt.instance<ProviderContainer>();
-  GetIt.instance.unregister<ProviderContainer>();
-  await container.pump();
-  GetIt.instance.registerSingleton(ProviderContainer(parent: container));
-
   await tester.waitFor(find.byType(LoginScreen));
 
   final startButton = find.byType(CTAHuge);
   await tester.tap(startButton);
   await tester.pump();
 
-  final serverUrl = const String.fromEnvironment("JS");
-  final username = const String.fromEnvironment("JU");
-  final password = const String.fromEnvironment("JP");
+  final serverUrl = const String.fromEnvironment("JELLYFIN_SERVER", defaultValue: "https://demo.jellyfin.org/stable");
+  final username = const String.fromEnvironment("JELLYFIN_USER", defaultValue: "demo");
+  final password = const String.fromEnvironment("JELLYFIN_PASSWORD", defaultValue: "");
 
   final urlEntry = find.byType(TextFormField);
   await tester.enterText(urlEntry, serverUrl);
