@@ -9,8 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tief_test_harness/tief_test_harness.dart';
 
-import '../../helpers.dart';
 import '../harness_creation.dart';
+import '../jellyfin_helpers.dart';
 
 @RegisterHarness("main", name: "Player Screen")
 Future<ScenarioHarness> buildPlayerScreenHarness() async {
@@ -23,7 +23,9 @@ Future<ScenarioHarness> buildPlayerScreenHarness() async {
         await loginToJellyfin(tester);
 
         final jellyfinApiHelper = GetIt.instance<JellyfinApiHelper>();
-        final playlist = await jellyfinApiHelper.getItemById(BaseItemId("e430ffce7a58fd3e7de0287521711a0a"));
+        final playlist = await jellyfinApiHelper.getItemById(
+          BaseItemId(const String.fromEnvironment("JELLYFIN_PLAYLIST_ID")),
+        );
         final playlistItems = await jellyfinApiHelper.getItems(parentItem: playlist);
         await GetIt.instance<QueueService>().startPlayback(
           items: playlistItems!,
@@ -46,7 +48,9 @@ Future<ScenarioHarness> buildPlayerScreenHarness() async {
         await loginToJellyfin(tester);
 
         final jellyfinApiHelper = GetIt.instance<JellyfinApiHelper>();
-        final playlist = await jellyfinApiHelper.getItemById(BaseItemId("e430ffce7a58fd3e7de0287521711a0a"));
+        final playlist = await jellyfinApiHelper.getItemById(
+          BaseItemId(const String.fromEnvironment("JELLYFIN_PLAYLIST_ID")),
+        );
         final playlistItems = await jellyfinApiHelper.getItems(parentItem: playlist);
         await GetIt.instance<QueueService>().startPlayback(
           items: playlistItems!,
