@@ -1,3 +1,4 @@
+import 'package:finamp/services/finamp_settings_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tief_test_harness/tief_test_harness.dart';
 
@@ -13,6 +14,8 @@ Future<ScenarioHarness> buildHomeScreenHarness() async {
       name: "Main",
       testCallback: (tester, binding) async {
         await loginToJellyfin(tester);
+
+        FinampSetters.setShowQuickActionsBanner(false);
       },
     ),
   );
