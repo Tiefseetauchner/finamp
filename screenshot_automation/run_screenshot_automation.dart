@@ -5,16 +5,32 @@ import "dart:io";
 import "package:args/args.dart";
 import "package:yaml/yaml.dart";
 
+void log(String message) {
+  print("\x1B[32m[screenshot_automation]\x1B[0m $message");
+}
+
 Future<void> main(List<String> args) async {
-  final parser = ArgParser();
+  final parser = ArgParser(usageLineLength: 80);
   parser.addOption("j-server", abbr: "s", help: "The Jellyfin instance to use for screenshots.");
   parser.addOption("j-user", abbr: "u", help: "The Jellyfin user to use for screenshots.");
   parser.addOption("j-password", abbr: "p", help: "The Jellyfin password to use for screenshots.");
   parser.addMultiOption("harnesses", abbr: "H", help: "The harnesses to run screenshots for.");
   parser.addOption("playlist-id", abbr: "l", help: "The Jellyfin playlist ID to use for screenshots.");
   parser.addFlag("load-config", abbr: "c", help: "Load configuration from the config.yml file.");
+  parser.addFlag("help", abbr: "h", hideNegatedUsage: true, help: "Display this help information.");
 
   final results = parser.parse(args);
+
+  if (results["help"] as bool) {
+    print("""\x1B[34mStart and run screenshot automation.\x1B[0m
+This script includes running the screenshot server, emulator, and Flutter
+integration tests for screenshots.
+
+Usage:""");
+    print(parser.usage);
+    return;
+  }
+
   String? server = results["j-server"] as String?;
   String? user = results["j-user"] as String?;
   String? password = results["j-password"] as String?;
@@ -22,7 +38,7 @@ Future<void> main(List<String> args) async {
   List<String>? harnesses = results["harnesses"] as List<String>?;
 
   if (results["load-config"] as bool) {
-    print("Loading configuration from config.yml...");
+    log("Loading configuration from config.yml...");
     final config = File("screenshot_automation/config.yml").readAsStringSync();
 
     final yaml = loadYaml(config);
@@ -33,14 +49,14 @@ Future<void> main(List<String> args) async {
     playlistId ??= yaml["playlistId"] as String?;
   }
 
-  print("Starting emulator...");
+  log("Starting emulator...");
   final emulatorProcess = await Process.start("emulator", ["@finampemu"]);
 
-  print("Starting screenshot server...");
+  log("Starting screenshot server...");
   final screenshotServerProcess = await Process.start("dart", ["run", "tief_screen:screenshot_server"]);
 
   ProcessSignal.sigint.watch().listen((signal) {
-    print("Received SIGINT, terminating processes.");
+    log("Received SIGINT, terminating processes.");
     screenshotServerProcess.kill();
     emulatorProcess.kill();
     exit(-1);
@@ -51,7 +67,7 @@ Future<void> main(List<String> args) async {
 
   // We have to spin wait until the screenshot server and emulator are fully started before running the Flutter tests.
   while (true) {
-    print("Waiting for screenshot server and emulator to be ready...");
+    log("Waiting for screenshot server and emulator to be ready...");
     sleep(Duration(milliseconds: 500));
 
     final screenshotServerHealthy = await checkScreenshotServerHealth();
@@ -60,7 +76,7 @@ Future<void> main(List<String> args) async {
     if (screenshotServerHealthy && emulatorLoaded) break;
   }
 
-  print("Screenshot server and emulator are ready.");
+  log("Screenshot server and emulator are ready.");
 
   final flutterTestProcess = await Process.start("flutter", [
     "test",
@@ -79,21 +95,21 @@ Future<void> main(List<String> args) async {
   await stderr.addStream(flutterTestProcess.stderr);
 
   ProcessSignal.sigint.watch().listen((signal) {
-    print("Received SIGINT, terminating processes.");
+    log("Received SIGINT, terminating processes.");
     flutterTestProcess.kill();
     exit(-1);
   });
 
   final flutterTestExitCode = await flutterTestProcess.exitCode;
-  print("Flutter test exited with code $flutterTestExitCode");
+  log("Flutter test exited with code $flutterTestExitCode");
 
-  print("Screenshot server and emulator processes are being terminated.");
+  log("Screenshot server and emulator processes are being terminated.");
   screenshotServerProcess.kill();
-  print("Screenshot server process terminated.");
+  log("Screenshot server process terminated.");
   emulatorProcess.kill();
-  print("Emulator process terminated.");
+  log("Emulator process terminated.");
 
-  print("All processes terminatored. Screenshots saved at screenshots/");
+  log("All processes terminatored. Screenshots saved at screenshots/");
 
   exit(flutterTestExitCode);
 }
