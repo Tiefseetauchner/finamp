@@ -29,7 +29,7 @@ This harness builder is then automatically (or rather, through build_runner) reg
 
 ## Emulators
 
-Use `avdmanager create avd -n "finampemu" -k "system-images;android-24;default;x86_64" --device "Nexus 5"` to create an emulator. Resize it to fit your need by changing `~/.android/avd/finampemu.avd/config.ini`. E.g.:
+Use `avdmanager create avd -n "finampemu" -k "system-images;android-36;default;x86_64" --device "Nexus 5"` to create an emulator. Resize it to fit your need by changing `~/.android/avd/finampemu.avd/config.ini`. E.g.:
 
 ```ini
 hw.lcd.height=1920
