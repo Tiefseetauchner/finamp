@@ -37,4 +37,10 @@ Future<void> loginToJellyfin(WidgetTester tester) async {
   final loginButton = find.text("Log In");
   await tester.tap(loginButton);
   await tester.pumpAndSettle();
+
+  final floatingActionButtonFinder = find.byType(FloatingActionButton);
+  if (tester.any(floatingActionButtonFinder)) {
+    await tester.tap(floatingActionButtonFinder);
+    await tester.pumpAndSettle();
+  }
 }
